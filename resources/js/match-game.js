@@ -9,9 +9,37 @@ var MatchGame = {};
   Generates and returns an array of matching card values.
  */
 
-MatchGame.generateCardValues = function () {
+ function getRandomIntInclusive(min, max) {
+   min = Math.ceil(min);
+   max = Math.floor(max);
+   return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
+ }
 
+MatchGame.generateCardValues = function () {
+  var numbers = [];
+  for (var i = 1; i < 9; i++) {
+  numbers.push(i);
+  numbers.push(i);
+  }
+
+
+//  console.log("cardValues: " + cardValues);
+//  console.log("cardValueIndex: " + cardValueIndex);
+//  console.log("currentCard: " + currentCard);
+
+var cards = [];
+
+  while (numbers.length !== 0){
+    var index = getRandomIntInclusive(0, numbers.length-1);
+    var pick = numbers[index];
+    cards.push(pick);
+    numbers.splice(index, 1);
+//    return cards;
+}
+
+console.log(cards);
 };
+
 
 /*
   Converts card values to jQuery card objects and adds them to the supplied game
