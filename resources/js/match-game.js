@@ -1,4 +1,11 @@
+$(document).ready(function() {
+    MatchGame.generateCardValues();
+    MatchGame.renderCards(cardValues, $game);
+});
+
 var MatchGame = {};
+var cardValues = [];
+var $game = $("#game");
 
 /*
   Sets up a new game after HTML document has loaded.
@@ -27,17 +34,16 @@ MatchGame.generateCardValues = function () {
 //  console.log("cardValueIndex: " + cardValueIndex);
 //  console.log("currentCard: " + currentCard);
 
-var cards = [];
+//var cardValues = [];
 
   while (numbers.length !== 0){
     var index = getRandomIntInclusive(0, numbers.length-1);
     var pick = numbers[index];
-    cards.push(pick);
+    cardValues.push(pick);
     numbers.splice(index, 1);
-//    return cards;
 }
-
-console.log(cards);
+return cardValues;
+//console.log(cardValues);
 };
 
 
@@ -48,7 +54,28 @@ console.log(cards);
 
 MatchGame.renderCards = function(cardValues, $game) {
 
-};
+  $game.empty();
+
+  var cardColor = ["hsl(25, 85%, 65%)", "hsl(55, 85%, 65%)", "hsl(90, 85%, 65%)", "hsl(160, 85%, 65%)", "hsl(220, 85%, 65%)", "hsl(265, 85%, 65%)", "hsl(310, 85%, 65%)", "hsl(360, 85%, 65%)"]
+
+
+  var card = [];
+
+  for (var i = 0; i < cardValues.length; i++) {
+    card[i] = {
+          data: cardValues[i],
+          html: $('<div class="card col-3">' + cardValues[i] + '</div>'),
+          flipped: false,
+          color: cardColor[cardValues[i]-1]
+    }
+    $game.append(card[i].html);
+    }
+//    console.log(cardValues);
+//    console.log($game);
+//    console.log(card);
+  };
+
+
 
 /*
   Flips over a given card and checks to see if two cards are flipped over.
