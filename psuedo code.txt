@@ -1,0 +1,57 @@
+flip:
+
+on click execute flipCard.
+
+flipCard:
+
+if card[this].flipped=false 
+change bg color to card[this].color
+insert html data of card[this].data
+
+else
+do nothing
+
+At the same time we need to evaluate in pairs:
+
+take card[this].data and compare to the next flipped card.
+if == then set .flipped for both to true and update color and html. else reset after 2 seconds (tbd timing).
+
+
+
+
+there is something fundamental about how I'm constructing these objects and passing them along to flipCard that is missing.
+
+Charlton Stuken
+561-734-5080
+next to Behesda Hospital
+
+Erich Menge
+495-4357
+
+
+
+if ($card.data("flipped", true)) {
+  console.log("flipped already");
+  console.log($card);
+  return;
+} else {
+  $card.text($card.data);
+  $card.css("background-color", $card.color);
+  $card.data("flipped", "true");
+  $game.data.push($card);
+}
+console.log($game.data);
+console.log($game.data.length);
+
+if ($game.data.length = 2 && $game.data[0].data = $game.data[1].data {
+  $game.data.css("background-color", "rbg(153, 153, 153)");
+  $game.data.css("color", "rgb(204, 204, 204)");
+  $game.data([]);
+} else if ($game.data.length = 2 && $game.data[0].data !== $game.data[1].data {
+  $game.data.text("");
+  $game.data.css("background-color", "32, 64, 86");
+  $card.data("flipped", "false");
+  $game.data([]);
+} else {
+  return;
+}

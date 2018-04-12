@@ -28,3 +28,8 @@ h3 {
   color: rgb(255, 255, 255);
   cursor: pointer;
 }
+
+.flipped {
+  background-color: rgb(153, 153, 153);
+  color: rgb(204, 204, 204);
+}

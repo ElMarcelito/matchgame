@@ -1,11 +1,12 @@
 $(document).ready(function() {
+    var $game = $("#game");
     MatchGame.generateCardValues();
     MatchGame.renderCards(cardValues, $game);
 });
 
 var MatchGame = {};
 var cardValues = [];
-var $game = $("#game");
+var score = 0;
 
 /*
   Sets up a new game after HTML document has loaded.
@@ -43,7 +44,6 @@ MatchGame.generateCardValues = function () {
     numbers.splice(index, 1);
 }
 return cardValues;
-//console.log(cardValues);
 };
 
 
@@ -54,25 +54,39 @@ return cardValues;
 
 MatchGame.renderCards = function(cardValues, $game) {
 
-  $game.empty();
+  var colors = [
+    'hsl(25, 85%, 65%)',
+    'hsl(55, 85%, 65%)',
+    'hsl(90, 85%, 65%)',
+    'hsl(160, 85%, 65%)',
+    'hsl(220, 85%, 65%)',
+    'hsl(265, 85%, 65%)',
+    'hsl(310, 85%, 65%)',
+    'hsl(360, 85%, 65%)'];
 
-  var cardColor = ["hsl(25, 85%, 65%)", "hsl(55, 85%, 65%)", "hsl(90, 85%, 65%)", "hsl(160, 85%, 65%)", "hsl(220, 85%, 65%)", "hsl(265, 85%, 65%)", "hsl(310, 85%, 65%)", "hsl(360, 85%, 65%)"]
+    $game.empty();
+    $game.data('flippedCards', []); // creating a data attribute in the $game object that specifies flippedCards as an (empty) array
 
+    for (var valueIndex = 0; valueIndex < cardValues.length; valueIndex++) {
+      var value = cardValues[valueIndex];
+      var color = colors[value - 1];
+      var data = {
+        value: value,
+        color: color,
+        isFlipped: false
+      }; // this generates the data objects that will be attached to each html element that is created. the html is NOT just anohter attribute of the object. It is created below and then the data is appended to it.
 
-  var card = [];
+      var $cardElement = $('<div class="card col-3"></div>'); //this is the html portion.
 
-  for (var i = 0; i < cardValues.length; i++) {
-    card[i] = {
-          data: cardValues[i],
-          html: $('<div class="card col-3">' + cardValues[i] + '</div>'),
-          flipped: false,
-          color: cardColor[cardValues[i]-1]
-    }
-    $game.append(card[i].html);
-    }
-//    console.log(cardValues);
-//    console.log($game);
-//    console.log(card);
+      $cardElement.data(data); //this adds the data object (above) to the html.
+
+      $game.append($cardElement);
+      }
+
+      $('.card').click(function() {
+        MatchGame.flipCard($(this), $('#game'));
+      });
+
   };
 
 
@@ -82,6 +96,55 @@ MatchGame.renderCards = function(cardValues, $game) {
   Updates styles on flipped cards depending whether they are a match or not.
  */
 
-MatchGame.flipCard = function($card, $game) {
+ MatchGame.flipCard = function($card, $game) {
+console.log(cardValues);
 
+while ($game.data('flippedCards').length < 2) {
+ if ($card.data('isFlipped')) {
+   return;
+ } else {
+   $card.css('background-color', $card.data('color'));
+   $card.data('isFlipped', true);
+   $card.text($card.data('value'));
+   $game.data('flippedCards').push($card);
+ };
+
+//console.log($game.data('flippedCards').length);
+};
+//console.log($game.data('flippedCards')[0].data('value'));
+//console.log($game.data('flippedCards')[1].data('value'));
+
+var $card1 = $game.data('flippedCards')[0];
+var $card2 = $game.data('flippedCards')[1];
+
+if ($card1.data('value') == $card2.data('value')) {
+//  console.log("equal! change the colors to gray and reset the flippedCards array!");
+  setTimeout(function(){
+    $card1.addClass('flipped');
+    $card1.css('background-color', 'rgb(153, 153, 153)');
+    $card2.addClass('flipped');
+    $card2.css('background-color', 'rgb(153, 153, 153)');
+    score++;
+    $game.data('flippedCards', []);
+    return;
+  }, 350);
+} else {
+//  console.log("not a match! flip the cards back over and reset the flippedCards array!")
+  setTimeout(function() {
+    $card1.css('background-color', 'rgb(32, 64, 86)');
+    $card1.data('isFlipped', false);
+    $card1.text('');
+    $card2.css('background-color', 'rgb(32, 64, 86)');
+    $card2.data('isFlipped', false);
+    $card2.text('');
+    $game.data('flippedCards', []);
+    return;
+  }, 450);
+};
+// console.log(score);
+// if (score == 8) {
+//   console.log("you are done!");
+// } else {
+//   return;
+// };
 };
