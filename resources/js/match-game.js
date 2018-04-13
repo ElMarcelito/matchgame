@@ -2,11 +2,13 @@ $(document).ready(function() {
     var $game = $("#game");
     MatchGame.generateCardValues();
     MatchGame.renderCards(cardValues, $game);
+    $('.btn').click(function() {
+      location.reload();
+    });
 });
 
 var MatchGame = {};
 var cardValues = [];
-var score = 0;
 
 /*
   Sets up a new game after HTML document has loaded.
@@ -29,13 +31,6 @@ MatchGame.generateCardValues = function () {
   numbers.push(i);
   numbers.push(i);
   }
-
-
-//  console.log("cardValues: " + cardValues);
-//  console.log("cardValueIndex: " + cardValueIndex);
-//  console.log("currentCard: " + currentCard);
-
-//var cardValues = [];
 
   while (numbers.length !== 0){
     var index = getRandomIntInclusive(0, numbers.length-1);
@@ -66,6 +61,7 @@ MatchGame.renderCards = function(cardValues, $game) {
 
     $game.empty();
     $game.data('flippedCards', []); // creating a data attribute in the $game object that specifies flippedCards as an (empty) array
+    $game.data('scoredCards', []); //creating an array for scored cards to track when game is over.
 
     for (var valueIndex = 0; valueIndex < cardValues.length; valueIndex++) {
       var value = cardValues[valueIndex];
@@ -86,7 +82,6 @@ MatchGame.renderCards = function(cardValues, $game) {
       $('.card').click(function() {
         MatchGame.flipCard($(this), $('#game'));
       });
-
   };
 
 
@@ -108,28 +103,25 @@ while ($game.data('flippedCards').length < 2) {
    $card.text($card.data('value'));
    $game.data('flippedCards').push($card);
  };
-
-//console.log($game.data('flippedCards').length);
 };
-//console.log($game.data('flippedCards')[0].data('value'));
-//console.log($game.data('flippedCards')[1].data('value'));
 
 var $card1 = $game.data('flippedCards')[0];
 var $card2 = $game.data('flippedCards')[1];
 
+if ($game.data('scoredCards').length < 14) {
 if ($card1.data('value') == $card2.data('value')) {
-//  console.log("equal! change the colors to gray and reset the flippedCards array!");
   setTimeout(function(){
     $card1.addClass('flipped');
     $card1.css('background-color', 'rgb(153, 153, 153)');
     $card2.addClass('flipped');
     $card2.css('background-color', 'rgb(153, 153, 153)');
-    score++;
+    $game.data('scoredCards').push($card1);
+    $game.data('scoredCards').push($card2);
     $game.data('flippedCards', []);
+//    console.log($game.data('scoredCards').length);
     return;
   }, 350);
 } else {
-//  console.log("not a match! flip the cards back over and reset the flippedCards array!")
   setTimeout(function() {
     $card1.css('background-color', 'rgb(32, 64, 86)');
     $card1.data('isFlipped', false);
@@ -141,6 +133,23 @@ if ($card1.data('value') == $card2.data('value')) {
     return;
   }, 450);
 };
+} else {
+  setTimeout(function(){
+    $card1.addClass('flipped');
+    $card1.css('background-color', 'rgb(153, 153, 153)');
+    $card2.addClass('flipped');
+    $card2.css('background-color', 'rgb(153, 153, 153)');
+    $game.data('scoredCards').push($card1);
+    $game.data('scoredCards').push($card2);
+    $game.data('flippedCards', []);
+    $game.data('scoredCards', []);
+    alert('You did it! Congratulations! Dale!');
+    $('.btn').removeClass('hide');
+    return;
+  }, 350);
+//  console.log("game over!");
+
+}
 // console.log(score);
 // if (score == 8) {
 //   console.log("you are done!");
